@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dapur Melodia</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+  html, body { height: 100%; margin: 0; }
+  * { box-sizing: border-box; }
+  .font-display { font-family: 'Playfair Display', Georgia, serif; }
+  .font-body { font-family: 'DM Sans', sans-serif; }
+  .page { display: none; }
+  .page.active { display: flex; flex-direction: column; }
+  .menu-card { transition: transform 0.3s, box-shadow 0.3s; }
+  .menu-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+  .fade-in { animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .toast { animation: toastIn 0.4s ease, toastOut 0.4s ease 1.8s forwards; }
+  @keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes toastOut { from { opacity:1; } to { opacity:0; transform:translateY(-10px); } }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+  .cart-badge { animation: popIn 0.3s ease; }
+  @keyframes popIn { 0% { transform: scale(0); } 70% { transform: scale(1.3); } 100% { transform: scale(1); } }
+</style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body">
+  <div id="app" class="h-full w-full overflow-auto" style="background:#FFF8F0;"><!-- TOAST -->
+   <div id="toast-container" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"></div><!-- ===== PAGE: MENU ===== -->
+   <div id="page-menu" class="page active min-h-full"><!-- Header -->
+    <header class="relative overflow-hidden" style="background: linear-gradient(135deg, #8B1A1A 0%, #C0392B 50%, #E74C3C 100%);">
+     <div class="absolute inset-0 opacity-10">
+      <svg width="100%" height="100%">
+       <pattern id="p" width="40" height="40" patternunits="userSpaceOnUse">
+        <circle cx="20" cy="20" r="2" fill="white" />
+       </pattern><rect width="100%" height="100%" fill="url(#p)" />
+      </svg>
+     </div>
+     <div class="relative px-5 py-8 md:py-12 text-center">
+      <div class="inline-flex items-center gap-2 mb-3 px-4 py-1.5 rounded-full" style="background:rgba(255,255,255,0.15);"><span class="text-xl">🥟</span> <span class="text-white/90 text-sm font-medium tracking-wide">Dimsum Premium Homemade</span>
+      </div>
+      <h1 id="el-store-name" class="font-display text-4xl md:text-5xl font-bold text-white mb-2">Dapur Melodia</h1>
+      <p id="el-tagline" class="text-white/80 text-base md:text-lg font-light">Cita rasa autentik, dibuat dengan cinta ❤️</p>
+     </div><!-- Cart button --> <button onclick="showPage('cart')" class="absolute top-5 right-5 bg-white/20 backdrop-blur-sm rounded-full p-3 hover:bg-white/30 transition-colors group"> <i data-lucide="shopping-bag" class="w-6 h-6 text-white"></i> <span id="cart-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center text-white cart-badge" style="background:#F39C12;"></span> </button>
+    </header><!-- Menu Section -->
+    <main class="flex-1 px-4 md:px-8 py-8 max-w-3xl mx-auto w-full">
+     <div class="flex items-center gap-3 mb-6">
+      <div class="w-1 h-8 rounded-full" style="background:#C0392B;"></div>
+      <h2 class="font-display text-2xl font-bold" style="color:#2C1810;">Menu Dimsum</h2>
+     </div>
+     <div id="menu-list" class="flex flex-col gap-5 fade-in"></div>
+    </main><!-- Floating Cart Bar -->
+    <div id="floating-cart" class="hidden sticky bottom-0 left-0 right-0 p-4" style="background:rgba(44,24,16,0.95); backdrop-filter:blur(8px);"><button onclick="showPage('cart')" class="w-full flex items-center justify-between text-white rounded-xl px-5 py-3.5 font-semibold transition-transform active:scale-[0.98]" style="background:#C0392B;"> <span class="flex items-center gap-2"><i data-lucide="shopping-bag" class="w-5 h-5"></i> Lihat Keranjang</span> <span id="floating-cart-total" class="bg-white/20 px-3 py-1 rounded-lg text-sm"></span> </button>
+    </div>
+   </div><!-- ===== PAGE: CART ===== -->
+   <div id="page-cart" class="page min-h-full">
+    <header class="px-5 py-4 flex items-center gap-3 border-b" style="background:white; border-color:#F0E0D0;"><button onclick="showPage('menu')" class="p-2 rounded-full hover:bg-gray-100 transition"><i data-lucide="arrow-left" class="w-5 h-5" style="color:#2C1810;"></i></button>
+     <h2 class="font-display text-xl font-bold" style="color:#2C1810;">Keranjang Anda</h2>
+    </header>
+    <main class="flex-1 px-4 md:px-8 py-6 max-w-3xl mx-auto w-full">
+     <div id="cart-items" class="flex flex-col gap-4"></div>
+     <div id="cart-empty" class="hidden text-center py-16"><span class="text-5xl mb-4 block">🛒</span>
+      <p class="text-lg font-semibold" style="color:#2C1810;">Keranjang masih kosong</p>
+      <p class="text-sm mt-1" style="color:#8B7355;">Yuk pilih dimsum favoritmu!</p><button onclick="showPage('menu')" class="mt-5 px-6 py-2.5 rounded-full text-white font-semibold text-sm transition hover:opacity-90" style="background:#C0392B;">Lihat Menu</button>
+     </div>
+    </main>
+    <div id="cart-footer" class="hidden sticky bottom-0 p-4" style="background:white; border-top:1px solid #F0E0D0;">
+     <div class="max-w-3xl mx-auto">
+      <div class="flex justify-between mb-3 text-sm" style="color:#8B7355;">
+       <span>Subtotal</span><span id="cart-subtotal" class="font-semibold" style="color:#2C1810;"></span>
+      </div><button onclick="showPage('checkout')" class="w-full py-3.5 rounded-xl text-white font-bold text-base transition hover:opacity-90 active:scale-[0.98]" style="background:#C0392B;"> Checkout </button>
+     </div>
+    </div>
+   </div><!-- ===== PAGE: CHECKOUT ===== -->
+   <div id="page-checkout" class="page min-h-full">
+    <header class="px-5 py-4 flex items-center gap-3 border-b" style="background:white; border-color:#F0E0D0;"><button onclick="showPage('cart')" class="p-2 rounded-full hover:bg-gray-100 transition"><i data-lucide="arrow-left" class="w-5 h-5" style="color:#2C1810;"></i></button>
+     <h2 class="font-display text-xl font-bold" style="color:#2C1810;">Pembayaran</h2>
+    </header>
+    <main class="flex-1 px-4 md:px-8 py-6 max-w-3xl mx-auto w-full fade-in"><!-- Order Summary -->
+     <div class="rounded-2xl p-5 mb-5" style="background:white; border:1px solid #F0E0D0;">
+      <h3 class="font-display font-bold mb-3" style="color:#2C1810;">Ringkasan Pesanan</h3>
+      <div id="checkout-items" class="flex flex-col gap-2 text-sm"></div>
+      <div class="border-t mt-3 pt-3 flex justify-between font-bold" style="border-color:#F0E0D0; color:#2C1810;"><span>Total</span><span id="checkout-total"></span>
+      </div>
+     </div><!-- Customer Info -->
+     <form id="checkout-form" class="rounded-2xl p-5 mb-5" style="background:white; border:1px solid #F0E0D0;">
+      <h3 class="font-display font-bold mb-4" style="color:#2C1810;">Informasi Pemesan</h3>
+      <div class="flex flex-col gap-4">
+       <div><label for="cust-name" class="block text-sm font-medium mb-1.5" style="color:#5D4037;">Nama Lengkap</label> <input id="cust-name" type="text" required placeholder="Nama Anda" class="w-full px-4 py-2.5 rounded-xl text-sm outline-none transition" style="border:1.5px solid #E0D0C0; background:#FFFAF5;" onfocus="this.style.borderColor='#C0392B'" onblur="this.style.borderColor='#E0D0C0'">
+       </div>
+       <div><label for="cust-phone" class="block text-sm font-medium mb-1.5" style="color:#5D4037;">No. WhatsApp</label> <input id="cust-phone" type="tel" required placeholder="08xxxxxxxxxx" class="w-full px-4 py-2.5 rounded-xl text-sm outline-none transition" style="border:1.5px solid #E0D0C0; background:#FFFAF5;" onfocus="this.style.borderColor='#C0392B'" onblur="this.style.borderColor='#E0D0C0'">
+       </div>
+       <div><label for="cust-address" class="block text-sm font-medium mb-1.5" style="color:#5D4037;">Alamat Pengiriman</label> <textarea id="cust-address" required rows="3" placeholder="Alamat lengkap..." class="w-full px-4 py-2.5 rounded-xl text-sm outline-none transition resize-none" style="border:1.5px solid #E0D0C0; background:#FFFAF5;" onfocus="this.style.borderColor='#C0392B'" onblur="this.style.borderColor='#E0D0C0'"></textarea>
+       </div>
+       <div><label class="block text-sm font-medium mb-2" style="color:#5D4037;">Metode Pembayaran</label>
+        <div class="flex flex-col gap-2"><label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition" style="border:1.5px solid #E0D0C0; background:#FFFAF5;"> <input type="radio" name="payment" value="transfer" checked class="accent-red-700"> <span class="text-sm font-medium" style="color:#2C1810;">Transfer Bank</span> </label> <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition" style="border:1.5px solid #E0D0C0; background:#FFFAF5;"> <input type="radio" name="payment" value="cod" class="accent-red-700"> <span class="text-sm font-medium" style="color:#2C1810;">Bayar di Tempat (COD)</span> </label>
+        </div>
+       </div>
+      </div>
+     </form>
+     <div class="text-center text-xs mb-4" style="color:#8B7355;">
+      ⚠️ Ini adalah demo pemesanan. Pembayaran tidak diproses secara nyata.
+     </div><button onclick="placeOrder()" class="w-full py-3.5 rounded-xl text-white font-bold text-base transition hover:opacity-90 active:scale-[0.98] mb-8" style="background:#C0392B;"> Pesan Sekarang </button>
+    </main>
+   </div><!-- ===== PAGE: SUCCESS ===== -->
+   <div id="page-success" class="page min-h-full items-center justify-center text-center px-6">
+    <div class="fade-in">
+     <div class="text-7xl mb-4">
+      🎉
+     </div>
+     <h2 class="font-display text-3xl font-bold mb-2" style="color:#2C1810;">Pesanan Berhasil!</h2>
+     <p class="mb-1" style="color:#8B7355;">Terima kasih telah memesan di <strong>Dapur Melodia</strong></p>
+     <p class="text-sm mb-8" style="color:#8B7355;">Pesanan Anda sedang diproses. Kami akan menghubungi via WhatsApp.</p><button onclick="resetOrder()" class="px-8 py-3 rounded-full text-white font-semibold transition hover:opacity-90" style="background:#C0392B;">Pesan Lagi</button>
+    </div>
+   </div>
+  </div>
+  <script>
+// ========== DATA ==========
+const MENU = [
+  { id: 'original', name: 'Dimsum Original', emoji: '🥟', desc: 'Dimsum kukus klasik dengan isian ayam dan udang pilihan', variants: [
+    { id: 'original-4', label: 'Isi 4 pcs', price: 15000 },
+    { id: 'original-6', label: 'Isi 6 pcs', price: 20000 }
+  ]},
+  { id: 'mentai', name: 'Dimsum Mentai', emoji: '🧀', desc: 'Dimsum spesial dengan topping saus mentai yang creamy & gurih', variants: [
+    { id: 'mentai-4', label: 'Isi 4 pcs', price: 20000 },
+    { id: 'mentai-6', label: 'Isi 6 pcs', price: 28000 }
+  ]}
+];
+
+let cart = {}; // { variantId: { menu, variant, qty } }
+
+// ========== HELPERS ==========
+function formatRp(n) { return 'Rp ' + n.toLocaleString('id-ID'); }
+
+function showToast(msg) {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast px-5 py-3 rounded-xl text-white text-sm font-semibold shadow-lg';
+  t.style.background = '#2C1810';
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 2400);
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('app').scrollTop = 0;
+  if (id === 'cart') renderCart();
+  if (id === 'checkout') renderCheckout();
+  setTimeout(() => lucide.createIcons(), 10);
+}
+
+// ========== MENU RENDER ==========
+function renderMenu() {
+  const list = document.getElementById('menu-list');
+  list.innerHTML = '';
+  MENU.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'menu-card rounded-2xl p-5 fade-in';
+    card.style.cssText = 'background:white; border:1px solid #F0E0D0;';
+    card.innerHTML = `
+      <div class="flex items-start gap-4 mb-4">
+        <span class="text-4xl">${item.emoji}</span>
+        <div class="flex-1">
+          <h3 class="font-display text-lg font-bold" style="color:#2C1810;">${item.name}</h3>
+          <p class="text-xs mt-1 leading-relaxed" style="color:#8B7355;">${item.desc}</p>
+        </div>
+      </div>
+      <div class="flex flex-col gap-3" id="variants-${item.id}"></div>
+    `;
+    list.appendChild(card);
+
+    const vc = card.querySelector(`#variants-${item.id}`);
+    item.variants.forEach(v => {
+      const row = document.createElement('div');
+      row.className = 'flex items-center gap-3 p-3 rounded-xl';
+      row.style.cssText = 'background:#FFFAF5; border:1px solid #F0E0D0;';
+      const existing = cart[v.id]?.qty || 0;
+      row.innerHTML = `
+        <div class="flex-1">
+          <span class="text-sm font-semibold" style="color:#2C1810;">${v.label}</span>
+          <span class="text-xs ml-2 font-medium" style="color:#C0392B;">${formatRp(v.price)}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="number" id="qty-${v.id}" value="${existing || ''}" min="1" max="100" placeholder="0"
+            class="w-14 text-center py-1.5 rounded-lg text-sm font-semibold outline-none"
+            style="border:1.5px solid #E0D0C0; color:#2C1810;"
+            onfocus="this.style.borderColor='#C0392B'" onblur="this.style.borderColor='#E0D0C0'"
+            oninput="handleQtyInput(this)">
+          <button onclick="addToCart('${item.id}','${v.id}')" class="p-2 rounded-lg text-white transition hover:opacity-90 active:scale-95" style="background:#C0392B;">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `;
+      vc.appendChild(row);
+    });
+  });
+  lucide.createIcons();
+}
+
+function handleQtyInput(el) {
+  el.value = el.value.replace(/[^0-9]/g, '');
+  let n = parseInt(el.value);
+  if (n > 100) { el.value = 100; }
+  if (n < 1 && el.value !== '') { el.value = 1; }
+}
+
+function addToCart(menuId, variantId) {
+  const input = document.getElementById('qty-' + variantId);
+  let qty = parseInt(input.value);
+  if (!qty || qty < 1) qty = 1;
+  if (qty > 100) qty = 100;
+  input.value = qty;
+
+  const menu = MENU.find(m => m.id === menuId);
+  const variant = menu.variants.find(v => v.id === variantId);
+
+  if (cart[variantId]) {
+    cart[variantId].qty = Math.min(cart[variantId].qty + qty, 100);
+  } else {
+    cart[variantId] = { menu, variant, qty };
+  }
+  input.value = '';
+  showToast(`${menu.name} (${variant.label}) x${qty} ditambahkan!`);
+  updateCartBadge();
+}
+
+function updateCartBadge() {
+  const entries = Object.values(cart);
+  const totalItems = entries.reduce((s, c) => s + c.qty, 0);
+  const badge = document.getElementById('cart-badge');
+  const floatBar = document.getElementById('floating-cart');
+  const floatTotal = document.getElementById('floating-cart-total');
+
+  if (totalItems > 0) {
+    badge.textContent = totalItems;
+    badge.classList.remove('hidden');
+    badge.classList.add('flex');
+    const totalPrice = entries.reduce((s, c) => s + c.variant.price * c.qty, 0);
+    floatTotal.textContent = `${totalItems} item • ${formatRp(totalPrice)}`;
+    floatBar.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+    badge.classList.remove('flex');
+    floatBar.classList.add('hidden');
+  }
+}
+
+// ========== CART RENDER ==========
+function renderCart() {
+  const container = document.getElementById('cart-items');
+  const empty = document.getElementById('cart-empty');
+  const footer = document.getElementById('cart-footer');
+  const entries = Object.entries(cart);
+
+  if (entries.length === 0) {
+    container.innerHTML = '';
+    empty.classList.remove('hidden');
+    footer.classList.add('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  footer.classList.remove('hidden');
+  container.innerHTML = '';
+
+  let subtotal = 0;
+  entries.forEach(([vid, item]) => {
+    const lineTotal = item.variant.price * item.qty;
+    subtotal += lineTotal;
+    const row = document.createElement('div');
+    row.className = 'flex items-center gap-4 p-4 rounded-2xl fade-in';
+    row.style.cssText = 'background:white; border:1px solid #F0E0D0;';
+    row.innerHTML = `
+      <span class="text-3xl">${item.menu.emoji}</span>
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-sm truncate" style="color:#2C1810;">${item.menu.name}</p>
+        <p class="text-xs" style="color:#8B7355;">${item.variant.label} • ${formatRp(item.variant.price)}</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="changeQty('${vid}',-1)" class="w-7 h-7 rounded-full flex items-center justify-center border transition hover:bg-gray-50" style="border-color:#E0D0C0; color:#5D4037;">−</button>
+        <span class="w-8 text-center font-bold text-sm" style="color:#2C1810;">${item.qty}</span>
+        <button onclick="changeQty('${vid}',1)" class="w-7 h-7 rounded-full flex items-center justify-center border transition hover:bg-gray-50" style="border-color:#E0D0C0; color:#5D4037;">+</button>
+      </div>
+      <div class="text-right min-w-[70px]">
+        <p class="font-bold text-sm" style="color:#C0392B;">${formatRp(lineTotal)}</p>
+        <button onclick="removeItem('${vid}')" class="text-xs mt-1 hover:underline" style="color:#8B7355;">Hapus</button>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+  document.getElementById('cart-subtotal').textContent = formatRp(subtotal);
+}
+
+function changeQty(vid, delta) {
+  if (!cart[vid]) return;
+  cart[vid].qty = Math.max(1, Math.min(100, cart[vid].qty + delta));
+  renderCart();
+  updateCartBadge();
+}
+
+function removeItem(vid) {
+  delete cart[vid];
+  renderCart();
+  updateCartBadge();
+  if (Object.keys(cart).length === 0) showToast('Keranjang dikosongkan');
+}
+
+// ========== CHECKOUT ==========
+function renderCheckout() {
+  const container = document.getElementById('checkout-items');
+  container.innerHTML = '';
+  let total = 0;
+  Object.values(cart).forEach(item => {
+    const line = item.variant.price * item.qty;
+    total += line;
+    const row = document.createElement('div');
+    row.className = 'flex justify-between py-1.5';
+    row.style.color = '#5D4037';
+    row.innerHTML = `<span>${item.menu.emoji} ${item.menu.name} (${item.variant.label}) x${item.qty}</span><span class="font-semibold">${formatRp(line)}</span>`;
+    container.appendChild(row);
+  });
+  document.getElementById('checkout-total').textContent = formatRp(total);
+}
+
+function placeOrder() {
+  const form = document.getElementById('checkout-form');
+  const name = document.getElementById('cust-name').value.trim();
+  const phone = document.getElementById('cust-phone').value.trim();
+  const addr = document.getElementById('cust-address').value.trim();
+  if (!name || !phone || !addr) {
+    showToast('Mohon lengkapi semua data!');
+    return;
+  }
+  showPage('success');
+}
+
+function resetOrder() {
+  cart = {};
+  updateCartBadge();
+  document.getElementById('checkout-form').reset();
+  showPage('menu');
+}
+
+// ========== ELEMENT SDK ==========
+const defaultConfig = {
+  store_name: 'Dapur Melodia',
+  tagline: 'Dimsum Premium Homemade',
+  background_color: '#FFF8F0',
+  primary_color: '#C0392B',
+  text_color: '#2C1810',
+  surface_color: '#FFFFFF',
+  accent_color: '#F39C12',
+  font_family: 'Playfair Display',
+  font_size: 16
+};
+
+function applyConfig(config) {
+  const c = { ...defaultConfig, ...config };
+  const el = (id) => document.getElementById(id);
+
+  el('el-store-name').textContent = c.store_name;
+  el('el-tagline').textContent = c.tagline;
+
+  document.getElementById('app').style.background = c.background_color;
+
+  // Apply font
+  const ff = c.font_family + ', Georgia, serif';
+  document.querySelectorAll('.font-display').forEach(e => e.style.fontFamily = ff);
+
+  const base = c.font_size || 16;
+  document.querySelectorAll('.font-display').forEach(e => {
+    if (e.tagName === 'H1') e.style.fontSize = (base * 2.5) + 'px';
+    else if (e.tagName === 'H2') e.style.fontSize = (base * 1.5) + 'px';
+    else if (e.tagName === 'H3') e.style.fontSize = (base * 1.2) + 'px';
+  });
+}
+
+window.elementSdk.init({
+  defaultConfig,
+  onConfigChange: async (config) => applyConfig(config),
+  mapToCapabilities: (config) => {
+    const c = { ...defaultConfig, ...config };
+    function mut(key) {
+      return {
+        get: () => c[key] || defaultConfig[key],
+        set: (v) => { c[key] = v; window.elementSdk.setConfig({ [key]: v }); }
+      };
+    }
+    return {
+      recolorables: [mut('background_color'), mut('surface_color'), mut('text_color'), mut('primary_color'), mut('accent_color')],
+      borderables: [],
+      fontEditable: mut('font_family'),
+      fontSizeable: mut('font_size')
+    };
+  },
+  mapToEditPanelValues: (config) => {
+    const c = { ...defaultConfig, ...config };
+    return new Map([
+      ['store_name', c.store_name],
+      ['tagline', c.tagline]
+    ]);
+  }
+});
+
+// ========== INIT ==========
+renderMenu();
+updateCartBadge();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f58d2398607ea86',t:'MTc3Nzc0MzczMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
