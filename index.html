@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dapur Melodia - Dimsum Premium</title>
+  <title>Dapur Melodia | Dimsum Mentai & Ori | Dimsum Jibeuh</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
@@ -45,7 +45,7 @@
      <div class="relative px-5 py-8 md:py-12 text-center">
       <div class="inline-flex items-center gap-2 mb-3 px-4 py-1.5 rounded-full" style="background:rgba(255,255,255,0.15);">
           <span class="text-xl">🥟</span> 
-          <span class="text-white/90 text-sm font-medium tracking-wide">Dimsum Premium Homemade</span>
+          <span class="text-white/90 text-sm font-medium tracking-wide">Dimsum Mentai & Original</span>
       </div>
       <h1 id="el-store-name" class="font-display text-4xl md:text-5xl font-bold text-white mb-2">Dapur Melodia</h1>
       <p id="el-tagline" class="text-white/80 text-base md:text-lg font-light">Cita rasa autentik, dibuat dengan cinta ❤️</p>
@@ -165,23 +165,29 @@
   <script>
 const APP_CONFIG = {
   store_name: 'Dapur Melodia',
-  tagline: 'Dimsum Premium Homemade',
-  whatsapp: '6281234567890'
+  tagline: 'Dimsum Mentai & Original',
+  whatsapp: '6282122321195'
 };
 
 const CATEGORIES = ["Dimsum Kukus", "Dimsum Mentai / Topping", "Frozen Food"];
 const MENU = [
   { id: 'original', category: 'Dimsum Kukus', name: 'Dimsum Original', image: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?q=80&w=400', desc: 'Klasik isian ayam dan udang juicy', variants: [
-    { id: 'original-4', label: 'Isi 4 pcs', price: 15000 },
-    { id: 'original-6', label: 'Isi 6 pcs', price: 20000 }
+    { id: 'original-4', label: 'Isi 3 pcs', price: 12000 },
+    { id: 'original-6', label: 'Isi 4 pcs', price: 16000 }
+    { id: 'original-6', label: 'Isi 6 pcs', price: 24000 }
+
   ]},
   { id: 'udang', category: 'Dimsum Kukus', name: 'Dimsum Udang', image: 'https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?q=80&w=400', desc: 'Full potongan udang segar', variants: [
-    { id: 'udang-4', label: 'Isi 4 pcs', price: 18000 },
-    { id: 'udang-6', label: 'Isi 6 pcs', price: 25000 }
+    { id: 'udang-4', label: 'Isi 3 pcs', price: 15000 },
+    { id: 'udang-6', label: 'Isi 4 pcs', price: 20000 }
+{ id: 'udang-6', label: 'Isi 6 pcs', price: 30000 }
+
   ]},
   { id: 'mentai', category: 'Dimsum Mentai / Topping', name: 'Dimsum Mentai', image: 'https://images.unsplash.com/photo-1523905330026-b8bd1f5f320e?q=80&w=400', desc: 'Saus mentai creamy khas Melodia', variants: [
-    { id: 'mentai-4', label: 'Isi 4 pcs', price: 20000 },
-    { id: 'mentai-6', label: 'Isi 6 pcs', price: 28000 }
+    { id: 'mentai-4', label: 'Isi 3 pcs', price: 15000 },
+    { id: 'mentai-6', label: 'Isi 4 pcs', price: 20000 }
+    { id: 'mentai-6', label: 'Isi 6 pcs', price: 30000 }
+
   ]},
   { id: 'mozarella', category: 'Dimsum Mentai / Topping', name: 'Dimsum Mozarella', image: 'https://images.unsplash.com/photo-1533777324565-a040eb52facd?q=80&w=400', desc: 'Keju mulur yang meleleh sempurna', variants: [
     { id: 'moza-4', label: 'Isi 4 pcs', price: 22000 }
