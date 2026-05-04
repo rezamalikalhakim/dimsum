@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dapur Melodia - Dimsum Premium</title>
-  
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
     html, body { height: 100%; margin: 0; }
@@ -26,10 +24,7 @@
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     input[type=number] { -moz-appearance: textfield; }
-    .cart-badge { animation: popIn 0.3s ease; }
-    @keyframes popIn { 0% { transform: scale(0); } 70% { transform: scale(1.3); } 100% { transform: scale(1); } }
     
-    /* Variabel Warna Utama */
     :root {
         --primary: #C0392B;
         --dark: #2C1810;
@@ -40,7 +35,6 @@
  </head>
  <body class="h-full font-body">
   <div id="app" class="h-full w-full overflow-auto" style="background: var(--bg-soft);">
-   
    <div id="toast-container" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"></div>
 
    <div id="page-menu" class="page active min-h-full">
@@ -56,23 +50,17 @@
       <h1 id="el-store-name" class="font-display text-4xl md:text-5xl font-bold text-white mb-2">Dapur Melodia</h1>
       <p id="el-tagline" class="text-white/80 text-base md:text-lg font-light">Cita rasa autentik, dibuat dengan cinta ❤️</p>
      </div>
-     
      <button onclick="showPage('cart')" class="absolute top-5 right-5 bg-white/20 backdrop-blur-sm rounded-full p-3 hover:bg-white/30 transition-colors"> 
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <span id="cart-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center text-white cart-badge" style="background:var(--accent);"></span> 
+      <span id="cart-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center text-white" style="background:var(--accent);"></span> 
      </button>
     </header>
-
     <main class="flex-1 px-4 md:px-8 py-8 max-w-3xl mx-auto w-full">
      <div id="menu-container"></div>
     </main>
-
     <div id="floating-cart" class="hidden sticky bottom-0 left-0 right-0 p-4" style="background:rgba(44,24,16,0.95); backdrop-filter:blur(8px);">
      <button onclick="showPage('cart')" class="w-full flex items-center justify-between text-white rounded-xl px-5 py-3.5 font-semibold transition-transform active:scale-[0.98]" style="background:var(--primary);"> 
-      <span class="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          Lihat Keranjang
-      </span> 
+      <span class="flex items-center gap-2">🛒 Lihat Keranjang</span> 
       <span id="floating-cart-total" class="bg-white/20 px-3 py-1 rounded-lg text-sm"></span> 
      </button>
     </div>
@@ -98,7 +86,7 @@
       <div class="flex justify-between mb-3 text-sm" style="color:#8B7355;">
        <span>Subtotal</span><span id="cart-subtotal" class="font-semibold" style="color:var(--dark);"></span>
       </div>
-      <button onclick="showPage('checkout')" class="w-full py-3.5 rounded-xl text-white font-bold text-base transition hover:opacity-90 active:scale-[0.98]" style="background:var(--primary);"> Checkout </button>
+      <button onclick="showPage('checkout')" class="w-full py-3.5 rounded-xl text-white font-bold text-base transition hover:opacity-90" style="background:var(--primary);"> Checkout </button>
      </div>
     </div>
    </div>
@@ -121,68 +109,90 @@
      <form id="checkout-form" class="rounded-2xl p-5 mb-5 bg-white border border-[#F0E0D0]">
       <h3 class="font-display font-bold mb-4" style="color:var(--dark);">Informasi Pemesan</h3>
       <div class="flex flex-col gap-4">
-       <div><label class="block text-sm font-medium mb-1.5" style="color:#5D4037;">Nama Lengkap</label> <input id="cust-name" type="text" required placeholder="Contoh: Budi Santoso" class="w-full px-4 py-2.5 rounded-xl text-sm outline-none border-[1.5px] border-[#E0D0C0] bg-[#FFFAF5] focus:border-[#C0392B]"></div>
-       <div><label class="block text-sm font-medium mb-1.5" style="color:#5D4037;">No. WhatsApp</label> <input id="cust-phone" type="tel" required placeholder="08xxxxxxxxxx" class="w-full px-4 py-2.5 rounded-xl text-sm outline-none border-[1.5px] border-[#E0D0C0] bg-[#FFFAF5] focus:border-[#C0392B]"></div>
-       <div><label class="block text-sm font-medium mb-1.5" style="color:#5D4037;">Alamat Lengkap</label> <textarea id="cust-address" required rows="3" placeholder="Nama jalan, nomor rumah, RT/RW..." class="w-full px-4 py-2.5 rounded-xl text-sm outline-none resize-none border-[1.5px] border-[#E0D0C0] bg-[#FFFAF5] focus:border-[#C0392B]"></textarea></div>
+       <div><label class="block text-sm font-medium mb-1.5" style="color:#5D4037;">Nama Lengkap</label> <input id="cust-name" type="text" required placeholder="Nama Anda" class="w-full px-4 py-2.5 rounded-xl text-sm border-[#E0D0C0] bg-[#FFFAF5] focus:border-[#C0392B] outline-none border-[1.5px]"></div>
+       <div><label class="block text-sm font-medium mb-1.5" style="color:#5D4037;">No. WhatsApp</label> <input id="cust-phone" type="tel" required placeholder="08xxxxxxxxxx" class="w-full px-4 py-2.5 rounded-xl text-sm border-[#E0D0C0] bg-[#FFFAF5] focus:border-[#C0392B] outline-none border-[1.5px]"></div>
+       <div><label class="block text-sm font-medium mb-1.5" style="color:#5D4037;">Alamat Lengkap</label> <textarea id="cust-address" required rows="3" placeholder="Alamat lengkap..." class="w-full px-4 py-2.5 rounded-xl text-sm border-[#E0D0C0] bg-[#FFFAF5] focus:border-[#C0392B] outline-none resize-none border-[1.5px]"></textarea></div>
+       
        <div>
         <label class="block text-sm font-medium mb-2" style="color:#5D4037;">Metode Pembayaran</label>
         <div class="flex flex-col gap-2">
-         <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer bg-[#FFFAF5] border-[1.5px] border-[#E0D0C0]"> <input type="radio" name="payment" value="Transfer Bank" checked class="accent-red-700"> <span class="text-sm font-medium" style="color:var(--dark);">Transfer Bank</span> </label> 
-         <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer bg-[#FFFAF5] border-[1.5px] border-[#E0D0C0]"> <input type="radio" name="payment" value="COD (Bayar di Tempat)" class="accent-red-700"> <span class="text-sm font-medium" style="color:var(--dark);">Bayar di Tempat (COD)</span> </label>
+         <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer bg-[#FFFAF5] border-[1.5px] border-[#E0D0C0]"> 
+            <input type="radio" name="payment" value="Transfer Bank" checked onchange="togglePaymentUI()" class="accent-red-700"> 
+            <span class="text-sm font-medium">Transfer Bank</span> 
+         </label>
+         <div id="bank-options" class="ml-8 mb-2">
+            <select id="bank-select" class="w-full px-3 py-2 rounded-lg text-xs border border-[#E0D0C0] bg-white outline-none">
+                <option value="OVO (082122321195)">OVO - 082122321195</option>
+                <option value="DANA (082122321195)">DANA - 082122321195</option>
+                <option value="Bank BCA (2313067998)">Bank BCA - 2313067998</option>
+            </select>
+         </div>
+
+         <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer bg-[#FFFAF5] border-[1.5px] border-[#E0D0C0]"> 
+            <input type="radio" name="payment" value="QRIS" onchange="togglePaymentUI()" class="accent-red-700"> 
+            <span class="text-sm font-medium">QRIS (Scan Otomatis)</span> 
+         </label>
+         <div id="qris-display" class="hidden flex flex-col items-center p-4 bg-white border border-[#E0D0C0] rounded-xl ml-8">
+            <p class="text-[10px] text-gray-500 mb-2">Scan QRIS Dapur Melodia</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=DapurMelodiaPremium" class="w-32 h-32" alt="QRIS Dapur Melodia">
+         </div>
+
+         <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer bg-[#FFFAF5] border-[1.5px] border-[#E0D0C0]"> 
+            <input type="radio" name="payment" value="COD" onchange="togglePaymentUI()" class="accent-red-700"> 
+            <span class="text-sm font-medium">Bayar di Tempat (COD)</span> 
+         </label>
         </div>
        </div>
       </div>
      </form>
-     <button onclick="placeOrder()" class="w-full py-4 rounded-xl text-white font-bold text-lg transition hover:opacity-90 active:scale-[0.98] mb-8" style="background:var(--primary);"> 
-      Kirim Pesanan ke WhatsApp 
-     </button>
+     <button onclick="placeOrder()" class="w-full py-4 rounded-xl text-white font-bold text-lg transition hover:opacity-90 active:scale-[0.98] mb-8" style="background:var(--primary);"> Kirim Pesanan ke WhatsApp </button>
     </main>
    </div>
 
    <div id="page-success" class="page min-h-full items-center justify-center text-center px-6">
-    <div class="fade-in">
+    <div class="fade-in max-w-sm">
      <div class="text-7xl mb-4">🎉</div>
      <h2 class="font-display text-3xl font-bold mb-2" style="color:var(--dark);">Pesanan Terkirim!</h2>
-     <p class="mb-1" style="color:#8B7355;">Silakan lanjutkan pembayaran melalui chat WhatsApp.</p>
-     <button onclick="resetOrder()" class="mt-8 px-8 py-3 rounded-full text-white font-semibold transition hover:opacity-90" style="background:var(--primary);">Pesan Lagi</button>
+     <p class="mb-6" style="color:#8B7355;">Jika pembayaran belum selesai, Anda dapat kembali untuk menyesuaikan data.</p>
+     <div class="flex flex-col gap-3">
+        <button onclick="showPage('checkout')" class="w-full px-8 py-3 rounded-full text-white font-semibold transition hover:opacity-90" style="background:var(--accent);">Kembali ke Data Pengiriman</button>
+        <button onclick="resetOrder()" class="w-full px-8 py-3 rounded-full text-white font-semibold transition hover:opacity-90" style="background:var(--primary);">Pesan Menu Lain</button>
+     </div>
     </div>
    </div>
   </div>
 
   <script>
-// ========== APP CONFIG (Alternatif SDK) ==========
 const APP_CONFIG = {
   store_name: 'Dapur Melodia',
   tagline: 'Dimsum Premium Homemade',
-  whatsapp: '6282122321195' // GANTI NOMOR WA DISINI
+  whatsapp: '6281234567890'
 };
 
-// ========== DATA MENU ==========
 const CATEGORIES = ["Dimsum Kukus", "Dimsum Mentai / Topping", "Frozen Food"];
 const MENU = [
-  { id: 'original', category: 'Dimsum Kukus', name: 'Dimsum Original', emoji: '🥟', desc: 'Dimsum kukus klasik dengan isian ayam dan udang pilihan', variants: [
+  { id: 'original', category: 'Dimsum Kukus', name: 'Dimsum Original', image: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?q=80&w=400', desc: 'Klasik isian ayam dan udang juicy', variants: [
     { id: 'original-4', label: 'Isi 4 pcs', price: 15000 },
     { id: 'original-6', label: 'Isi 6 pcs', price: 20000 }
   ]},
-  { id: 'udang', category: 'Dimsum Kukus', name: 'Dimsum Udang', emoji: '🍤', desc: 'Isian udang utuh yang juicy di setiap gigitan', variants: [
+  { id: 'udang', category: 'Dimsum Kukus', name: 'Dimsum Udang', image: 'https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?q=80&w=400', desc: 'Full potongan udang segar', variants: [
     { id: 'udang-4', label: 'Isi 4 pcs', price: 18000 },
     { id: 'udang-6', label: 'Isi 6 pcs', price: 25000 }
   ]},
-  { id: 'mentai', category: 'Dimsum Mentai / Topping', name: 'Dimsum Mentai', emoji: '🧀', desc: 'Dimsum spesial dengan topping saus mentai yang creamy & gurih', variants: [
+  { id: 'mentai', category: 'Dimsum Mentai / Topping', name: 'Dimsum Mentai', image: 'https://images.unsplash.com/photo-1523905330026-b8bd1f5f320e?q=80&w=400', desc: 'Saus mentai creamy khas Melodia', variants: [
     { id: 'mentai-4', label: 'Isi 4 pcs', price: 20000 },
     { id: 'mentai-6', label: 'Isi 6 pcs', price: 28000 }
   ]},
-  { id: 'mozarella', category: 'Dimsum Mentai / Topping', name: 'Dimsum Mozarella', emoji: '🔥', desc: 'Topping keju mozarella yang meleleh sempurna', variants: [
+  { id: 'mozarella', category: 'Dimsum Mentai / Topping', name: 'Dimsum Mozarella', image: 'https://images.unsplash.com/photo-1533777324565-a040eb52facd?q=80&w=400', desc: 'Keju mulur yang meleleh sempurna', variants: [
     { id: 'moza-4', label: 'Isi 4 pcs', price: 22000 }
   ]},
-  { id: 'frozen-mix', category: 'Frozen Food', name: 'Mix Frozen Pack', emoji: '❄️', desc: 'Cocok untuk stok di rumah, isi 10 pcs campur', variants: [
+  { id: 'frozen-mix', category: 'Frozen Food', name: 'Mix Frozen Pack', image: 'https://images.unsplash.com/photo-1599321955419-78a876936d6b?q=80&w=400', desc: 'Stok di rumah, isi 10 pcs campur', variants: [
     { id: 'frozen-10', label: 'Isi 10 pcs', price: 45000 }
   ]}
 ];
 
-let cart = {};
+let cart = JSON.parse(localStorage.getItem('melodia_cart')) || {};
 
-// ========== HELPERS ==========
 function formatRp(n) { return 'Rp ' + n.toLocaleString('id-ID'); }
 
 function showToast(msg) {
@@ -198,11 +208,34 @@ function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   document.getElementById('app').scrollTop = 0;
+  localStorage.setItem('melodia_last_page', id);
   if (id === 'cart') renderCart();
-  if (id === 'checkout') renderCheckout();
+  if (id === 'checkout') { renderCheckout(); togglePaymentUI(); }
 }
 
-// ========== RENDER MENU ==========
+function saveCart() {
+    localStorage.setItem('melodia_cart', JSON.stringify(cart));
+    updateCartBadge();
+}
+
+// LOGIKA SHOW/HIDE PAYMENT DETAILS
+function togglePaymentUI() {
+    const payment = document.querySelector('input[name="payment"]:checked').value;
+    const bankDiv = document.getElementById('bank-options');
+    const qrisDiv = document.getElementById('qris-display');
+    
+    bankDiv.classList.toggle('hidden', payment !== 'Transfer Bank');
+    qrisDiv.classList.toggle('hidden', payment !== 'QRIS');
+}
+
+function adjustInputQty(vid, amount) {
+    const input = document.getElementById('qty-' + vid);
+    let current = parseInt(input.value) || 0;
+    let newValue = current + amount;
+    if (newValue < 0) newValue = 0;
+    input.value = newValue;
+}
+
 function renderMenu() {
   const container = document.getElementById('menu-container');
   container.innerHTML = '';
@@ -218,13 +251,31 @@ function renderMenu() {
     itemsInCat.forEach(item => {
       const card = document.createElement('div');
       card.className = 'menu-card rounded-2xl p-5 bg-white border border-[#F0E0D0] fade-in';
-      card.innerHTML = `<div class="flex items-start gap-4 mb-4"><span class="text-4xl">${item.emoji}</span><div class="flex-1"><h3 class="font-display text-lg font-bold text-[#2C1810]">${item.name}</h3><p class="text-xs mt-1 text-[#8B7355]">${item.desc}</p></div></div><div class="flex flex-col gap-3" id="variants-${item.id}"></div>`;
+      card.innerHTML = `
+        <div class="flex items-start gap-4 mb-4">
+            <img src="${item.image}" class="w-20 h-20 rounded-xl object-cover shadow-sm bg-gray-100" alt="${item.name}">
+            <div class="flex-1">
+                <h3 class="font-display text-lg font-bold text-[#2C1810]">${item.name}</h3>
+                <p class="text-xs mt-1 text-[#8B7355]">${item.desc}</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-3" id="variants-${item.id}"></div>`;
       list.appendChild(card);
       const vc = card.querySelector(`#variants-${item.id}`);
       item.variants.forEach(v => {
         const row = document.createElement('div');
         row.className = 'flex items-center gap-3 p-3 rounded-xl bg-[#FFFAF5] border border-[#F0E0D0]';
-        row.innerHTML = `<div class="flex-1"><span class="text-sm font-semibold text-[#2C1810]">${v.label}</span><span class="text-xs ml-2 font-medium text-[#C0392B]">${formatRp(v.price)}</span></div><div class="flex items-center gap-2"><input type="number" id="qty-${v.id}" value="" min="1" max="50" placeholder="0" class="w-12 text-center py-1.5 rounded-lg text-sm font-semibold border border-[#E0D0C0] outline-none"><button onclick="addToCart('${item.id}','${v.id}')" class="p-2 rounded-lg text-white bg-[#C0392B] active:scale-95"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></div>`;
+        row.innerHTML = `
+            <div class="flex-1">
+                <span class="text-sm font-semibold text-[#2C1810]">${v.label}</span>
+                <span class="text-xs ml-2 font-medium text-[#C0392B]">${formatRp(v.price)}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="adjustInputQty('${v.id}', -1)" class="w-8 h-8 rounded-lg border border-[#E0D0C0] bg-white text-gray-500 font-bold">-</button>
+                <input type="number" id="qty-${v.id}" min="1" placeholder="0" class="w-10 text-center py-1.5 rounded-lg text-sm font-semibold border border-[#E0D0C0] outline-none bg-white">
+                <button onclick="adjustInputQty('${v.id}', 1)" class="w-8 h-8 rounded-lg border border-[#E0D0C0] bg-white text-gray-500 font-bold">+</button>
+                <button onclick="addToCart('${item.id}','${v.id}')" class="p-2 ml-1 rounded-lg text-white bg-[#C0392B]">OK</button>
+            </div>`;
         vc.appendChild(row);
       });
     });
@@ -241,7 +292,7 @@ function addToCart(menuId, variantId) {
   if (cart[variantId]) { cart[variantId].qty += qty; } else { cart[variantId] = { menu, variant, qty }; }
   input.value = '';
   showToast(`${menu.name} ditambahkan!`);
-  updateCartBadge();
+  saveCart();
 }
 
 function updateCartBadge() {
@@ -278,8 +329,8 @@ function renderCart() {
     const lineTotal = item.variant.price * item.qty;
     subtotal += lineTotal;
     const row = document.createElement('div');
-    row.className = 'flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#F0E0D0] fade-in';
-    row.innerHTML = `<span class="text-3xl">${item.menu.emoji}</span><div class="flex-1 min-w-0"><p class="font-semibold text-sm truncate">${item.menu.name}</p><p class="text-xs text-[#8B7355]">${item.variant.label}</p></div><div class="flex items-center gap-2"><button onclick="changeQty('${vid}',-1)" class="w-7 h-7 rounded-full border border-[#E0D0C0] flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg></button><span class="w-6 text-center font-bold text-sm">${item.qty}</span><button onclick="changeQty('${vid}',1)" class="w-7 h-7 rounded-full border border-[#E0D0C0] flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button></div><div class="text-right min-w-[80px]"><p class="font-bold text-sm text-[#C0392B]">${formatRp(lineTotal)}</p></div>`;
+    row.className = 'flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#F0E0D0]';
+    row.innerHTML = `<img src="${item.menu.image}" class="w-12 h-12 rounded-lg object-cover bg-gray-100"><div class="flex-1 min-w-0"><p class="font-semibold text-sm truncate">${item.menu.name}</p><p class="text-xs text-[#8B7355]">${item.variant.label}</p></div><div class="flex items-center gap-2"><button onclick="changeQty('${vid}',-1)" class="w-7 h-7 rounded-full border flex items-center justify-center">-</button><span class="w-6 text-center font-bold text-sm">${item.qty}</span><button onclick="changeQty('${vid}',1)" class="w-7 h-7 rounded-full border flex items-center justify-center">+</button></div><div class="text-right min-w-[80px]"><p class="font-bold text-sm text-[#C0392B]">${formatRp(lineTotal)}</p></div>`;
     container.appendChild(row);
   });
   document.getElementById('cart-subtotal').textContent = formatRp(subtotal);
@@ -289,8 +340,8 @@ function changeQty(vid, delta) {
   if (!cart[vid]) return;
   cart[vid].qty += delta;
   if (cart[vid].qty <= 0) delete cart[vid];
+  saveCart();
   renderCart();
-  updateCartBadge();
 }
 
 function renderCheckout() {
@@ -302,7 +353,7 @@ function renderCheckout() {
     total += line;
     const row = document.createElement('div');
     row.className = 'flex justify-between py-1';
-    row.innerHTML = `<span class="text-[#5D4037]">${item.menu.name} (${item.variant.label}) x${item.qty}</span><span class="font-semibold">${formatRp(line)}</span>`;
+    row.innerHTML = `<span class="text-[#5D4037]">${item.menu.name} x${item.qty}</span><span class="font-semibold">${formatRp(line)}</span>`;
     container.appendChild(row);
   });
   document.getElementById('checkout-total').textContent = formatRp(total);
@@ -312,7 +363,12 @@ function placeOrder() {
   const name = document.getElementById('cust-name').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
   const addr = document.getElementById('cust-address').value.trim();
-  const payment = document.querySelector('input[name="payment"]:checked').value;
+  let payment = document.querySelector('input[name="payment"]:checked').value;
+  
+  if (payment === "Transfer Bank") {
+    payment = "Transfer ke " + document.getElementById('bank-select').value;
+  }
+
   if (!name || !phone || !addr) { showToast('Harap lengkapi semua data!'); return; }
 
   let message = `*PESANAN BARU - DAPUR MELODIA*\n----------------------------------\n*Nama:* ${name}\n*No. WA:* ${phone}\n*Alamat:* ${addr}\n*Pembayaran:* ${payment}\n----------------------------------\n*Daftar Pesanan:*\n`;
@@ -322,24 +378,26 @@ function placeOrder() {
     message += `- ${item.menu.name} (${item.variant.label}) x${item.qty} = ${formatRp(linePrice)}\n`;
     grandTotal += linePrice;
   });
-  message += `----------------------------------\n*TOTAL PEMBAYARAN: ${formatRp(grandTotal)}*\n----------------------------------\nMohon segera diproses ya, terima kasih!`;
-  const waUrl = `https://wa.me/${APP_CONFIG.whatsapp}?text=${encodeURIComponent(message)}`;
-  window.open(waUrl, '_blank');
+  message += `----------------------------------\n*TOTAL: ${formatRp(grandTotal)}*`;
+  
+  window.open(`https://wa.me/${APP_CONFIG.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
   showPage('success');
 }
 
 function resetOrder() {
   cart = {};
-  updateCartBadge();
+  saveCart();
   document.getElementById('checkout-form').reset();
   showPage('menu');
 }
 
-// ========== INIT ON LOAD ==========
 window.onload = () => {
     document.getElementById('el-store-name').textContent = APP_CONFIG.store_name;
     document.getElementById('el-tagline').textContent = APP_CONFIG.tagline;
     renderMenu();
+    updateCartBadge();
+    const lastPage = localStorage.getItem('melodia_last_page');
+    if (lastPage) showPage(lastPage);
 };
 </script>
  </body>
