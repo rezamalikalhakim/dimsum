@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    html, body { height: 100%; margin: 0; }
+    html, body { height: 100%; margin: 0; scroll-behavior: smooth; }
     * { box-sizing: border-box; }
     .font-display { font-family: 'Playfair Display', Georgia, serif; }
     .font-body { font-family: 'DM Sans', sans-serif; }
@@ -21,6 +21,7 @@
     .toast { animation: toastIn 0.4s ease, toastOut 0.4s ease 1.8s forwards; }
     @keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
     @keyframes toastOut { from { opacity:1; } to { opacity:0; transform:translateY(-10px); } }
+    
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     input[type=number] { -moz-appearance: textfield; }
@@ -31,11 +32,16 @@
         --accent: #F39C12;
         --bg-soft: #FFF8F0;
     }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-soft); }
+    ::-webkit-scrollbar-thumb { background: #DCC6B0; border-radius: 10px; }
   </style>
  </head>
  <body class="h-full font-body">
   <div id="app" class="h-full w-full overflow-auto" style="background: var(--bg-soft);">
-   <div id="toast-container" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"></div>
+   <div id="toast-container" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2"></div>
 
    <div id="page-menu" class="page active min-h-full">
     <header class="relative overflow-hidden" style="background: linear-gradient(135deg, #8B1A1A 0%, #C0392B 50%, #E74C3C 100%);">
@@ -52,13 +58,13 @@
      </div>
      <button onclick="showPage('cart')" class="absolute top-5 right-5 bg-white/20 backdrop-blur-sm rounded-full p-3 hover:bg-white/30 transition-colors"> 
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <span id="cart-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center text-white" style="background:var(--accent);"></span> 
+      <span id="cart-badge" class="hidden absolute -top-1 -right-1 min-w-[20px] h-5 rounded-full text-[10px] font-bold flex items-center justify-center text-white px-1" style="background:var(--accent);"></span> 
      </button>
     </header>
     <main class="flex-1 px-4 md:px-8 py-8 max-w-3xl mx-auto w-full">
      <div id="menu-container"></div>
     </main>
-    <div id="floating-cart" class="hidden sticky bottom-0 left-0 right-0 p-4" style="background:rgba(44,24,16,0.95); backdrop-filter:blur(8px);">
+    <div id="floating-cart" class="hidden sticky bottom-0 left-0 right-0 p-4 z-40" style="background:rgba(44,24,16,0.9); backdrop-filter:blur(8px);">
      <button onclick="showPage('cart')" class="w-full flex items-center justify-between text-white rounded-xl px-5 py-3.5 font-semibold transition-transform active:scale-[0.98]" style="background:var(--primary);"> 
       <span class="flex items-center gap-2">🛒 Lihat Keranjang</span> 
       <span id="floating-cart-total" class="bg-white/20 px-3 py-1 rounded-lg text-sm"></span> 
@@ -67,7 +73,7 @@
    </div>
 
    <div id="page-cart" class="page min-h-full">
-    <header class="px-5 py-4 flex items-center gap-3 border-b bg-white border-[#F0E0D0]">
+    <header class="px-5 py-4 flex items-center gap-3 border-b bg-white border-[#F0E0D0] sticky top-0 z-10">
      <button onclick="showPage('menu')" class="p-2 rounded-full hover:bg-gray-100 transition">
          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
      </button>
@@ -92,7 +98,7 @@
    </div>
 
    <div id="page-checkout" class="page min-h-full">
-    <header class="px-5 py-4 flex items-center gap-3 border-b bg-white border-[#F0E0D0]">
+    <header class="px-5 py-4 flex items-center gap-3 border-b bg-white border-[#F0E0D0] sticky top-0 z-10">
      <button onclick="showPage('cart')" class="p-2 rounded-full hover:bg-gray-100 transition">
          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
      </button>
@@ -117,7 +123,7 @@
         <label class="block text-sm font-medium mb-2" style="color:#5D4037;">Metode Pembayaran</label>
         <div class="flex flex-col gap-2">
          <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer bg-[#FFFAF5] border-[1.5px] border-[#E0D0C0]"> 
-            <input type="radio" name="payment" value="Transfer Bank" checked onchange="togglePaymentUI()" class="accent-red-700"> 
+            <input type="radio" name="payment" value="Transfer Bank" checked onchange="togglePaymentUI()" class="accent-red-700 w-4 h-4"> 
             <span class="text-sm font-medium">Transfer Bank</span> 
          </label>
          <div id="bank-options" class="ml-8 mb-2">
@@ -129,23 +135,23 @@
          </div>
 
          <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer bg-[#FFFAF5] border-[1.5px] border-[#E0D0C0]"> 
-            <input type="radio" name="payment" value="QRIS" onchange="togglePaymentUI()" class="accent-red-700"> 
+            <input type="radio" name="payment" value="QRIS" onchange="togglePaymentUI()" class="accent-red-700 w-4 h-4"> 
             <span class="text-sm font-medium">QRIS (Scan Otomatis)</span> 
          </label>
          <div id="qris-display" class="hidden flex flex-col items-center p-4 bg-white border border-[#E0D0C0] rounded-xl ml-8">
-            <p class="text-[10px] text-gray-500 mb-2">Scan QRIS Dapur Melodia</p>
+            <p class="text-[10px] text-gray-500 mb-2 font-bold">SILAHKAN SCAN QRIS DI BAWAH INI:</p>
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=DapurMelodiaPremium" class="w-32 h-32" alt="QRIS Dapur Melodia">
          </div>
 
          <label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer bg-[#FFFAF5] border-[1.5px] border-[#E0D0C0]"> 
-            <input type="radio" name="payment" value="COD" onchange="togglePaymentUI()" class="accent-red-700"> 
+            <input type="radio" name="payment" value="COD" onchange="togglePaymentUI()" class="accent-red-700 w-4 h-4"> 
             <span class="text-sm font-medium">Bayar di Tempat (COD)</span> 
          </label>
         </div>
        </div>
       </div>
      </form>
-     <button onclick="placeOrder()" class="w-full py-4 rounded-xl text-white font-bold text-lg transition hover:opacity-90 active:scale-[0.98] mb-8" style="background:var(--primary);"> Kirim Pesanan ke WhatsApp </button>
+     <button onclick="placeOrder()" class="w-full py-4 rounded-xl text-white font-bold text-lg transition hover:opacity-90 active:scale-[0.98] mb-8 shadow-lg shadow-red-900/20" style="background:var(--primary);"> Kirim Pesanan ke WhatsApp </button>
     </main>
    </div>
 
@@ -153,9 +159,9 @@
     <div class="fade-in max-w-sm">
      <div class="text-7xl mb-4">🎉</div>
      <h2 class="font-display text-3xl font-bold mb-2" style="color:var(--dark);">Pesanan Terkirim!</h2>
-     <p class="mb-6" style="color:#8B7355;">Jika pembayaran belum selesai, Anda dapat kembali untuk menyesuaikan data.</p>
+     <p class="mb-6" style="color:#8B7355;">Terima kasih telah memesan di Dapur Melodia. Tim kami akan segera menghubungi Anda.</p>
      <div class="flex flex-col gap-3">
-        <button onclick="showPage('checkout')" class="w-full px-8 py-3 rounded-full text-white font-semibold transition hover:opacity-90" style="background:var(--accent);">Kembali ke Data Pengiriman</button>
+        <button onclick="showPage('menu')" class="w-full px-8 py-3 rounded-full text-white font-semibold transition hover:opacity-90" style="background:var(--accent);">Kembali ke Beranda</button>
         <button onclick="resetOrder()" class="w-full px-8 py-3 rounded-full text-white font-semibold transition hover:opacity-90" style="background:var(--primary);">Pesan Menu Lain</button>
      </div>
     </div>
@@ -165,29 +171,26 @@
   <script>
 const APP_CONFIG = {
   store_name: 'Dapur Melodia',
-  tagline: 'Dimsum Mentai & Original',
+  tagline: 'Cita rasa autentik, dibuat dengan cinta ❤️',
   whatsapp: '6282122321195'
 };
 
 const CATEGORIES = ["Dimsum Kukus", "Dimsum Mentai / Topping", "Frozen Food"];
 const MENU = [
   { id: 'original', category: 'Dimsum Kukus', name: 'Dimsum Original', image: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?q=80&w=400', desc: 'Klasik isian ayam dan udang juicy', variants: [
-    { id: 'original-4', label: 'Isi 3 pcs', price: 12000 },
-    { id: 'original-6', label: 'Isi 4 pcs', price: 16000 }
+    { id: 'original-3', label: 'Isi 3 pcs', price: 12000 },
+    { id: 'original-4', label: 'Isi 4 pcs', price: 16000 },
     { id: 'original-6', label: 'Isi 6 pcs', price: 24000 }
-
   ]},
   { id: 'udang', category: 'Dimsum Kukus', name: 'Dimsum Udang', image: 'https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?q=80&w=400', desc: 'Full potongan udang segar', variants: [
-    { id: 'udang-4', label: 'Isi 3 pcs', price: 15000 },
-    { id: 'udang-6', label: 'Isi 4 pcs', price: 20000 }
-{ id: 'udang-6', label: 'Isi 6 pcs', price: 30000 }
-
+    { id: 'udang-3', label: 'Isi 3 pcs', price: 15000 },
+    { id: 'udang-4', label: 'Isi 4 pcs', price: 20000 },
+    { id: 'udang-6', label: 'Isi 6 pcs', price: 30000 }
   ]},
   { id: 'mentai', category: 'Dimsum Mentai / Topping', name: 'Dimsum Mentai', image: 'https://images.unsplash.com/photo-1523905330026-b8bd1f5f320e?q=80&w=400', desc: 'Saus mentai creamy khas Melodia', variants: [
-    { id: 'mentai-4', label: 'Isi 3 pcs', price: 15000 },
-    { id: 'mentai-6', label: 'Isi 4 pcs', price: 20000 }
+    { id: 'mentai-3', label: 'Isi 3 pcs', price: 15000 },
+    { id: 'mentai-4', label: 'Isi 4 pcs', price: 20000 },
     { id: 'mentai-6', label: 'Isi 6 pcs', price: 30000 }
-
   ]},
   { id: 'mozarella', category: 'Dimsum Mentai / Topping', name: 'Dimsum Mozarella', image: 'https://images.unsplash.com/photo-1533777324565-a040eb52facd?q=80&w=400', desc: 'Keju mulur yang meleleh sempurna', variants: [
     { id: 'moza-4', label: 'Isi 4 pcs', price: 22000 }
@@ -207,7 +210,10 @@ function showToast(msg) {
   t.className = 'toast px-5 py-3 rounded-xl text-white text-sm font-semibold shadow-lg bg-[#2C1810]';
   t.textContent = msg;
   c.appendChild(t);
-  setTimeout(() => t.remove(), 2400);
+  setTimeout(() => {
+    t.style.opacity = '0';
+    setTimeout(() => t.remove(), 400);
+  }, 2000);
 }
 
 function showPage(id) {
@@ -224,7 +230,6 @@ function saveCart() {
     updateCartBadge();
 }
 
-// LOGIKA SHOW/HIDE PAYMENT DETAILS
 function togglePaymentUI() {
     const payment = document.querySelector('input[name="payment"]:checked').value;
     const bankDiv = document.getElementById('bank-options');
@@ -248,12 +253,15 @@ function renderMenu() {
   CATEGORIES.forEach(catName => {
     const itemsInCat = MENU.filter(m => m.category === catName);
     if (itemsInCat.length === 0) return;
+    
     const catHeader = document.createElement('div');
     catHeader.className = 'flex items-center gap-3 mb-4 mt-8 first:mt-0';
     catHeader.innerHTML = `<div class="w-1.5 h-6 rounded-full bg-[#C0392B]"></div><h2 class="font-display text-xl font-bold text-[#2C1810]">${catName}</h2>`;
     container.appendChild(catHeader);
+    
     const list = document.createElement('div');
     list.className = 'flex flex-col gap-4 mb-8';
+    
     itemsInCat.forEach(item => {
       const card = document.createElement('div');
       card.className = 'menu-card rounded-2xl p-5 bg-white border border-[#F0E0D0] fade-in';
@@ -267,6 +275,7 @@ function renderMenu() {
         </div>
         <div class="flex flex-col gap-3" id="variants-${item.id}"></div>`;
       list.appendChild(card);
+      
       const vc = card.querySelector(`#variants-${item.id}`);
       item.variants.forEach(v => {
         const row = document.createElement('div');
@@ -277,10 +286,10 @@ function renderMenu() {
                 <span class="text-xs ml-2 font-medium text-[#C0392B]">${formatRp(v.price)}</span>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="adjustInputQty('${v.id}', -1)" class="w-8 h-8 rounded-lg border border-[#E0D0C0] bg-white text-gray-500 font-bold">-</button>
+                <button onclick="adjustInputQty('${v.id}', -1)" class="w-8 h-8 rounded-lg border border-[#E0D0C0] bg-white text-gray-500 font-bold hover:bg-gray-50">-</button>
                 <input type="number" id="qty-${v.id}" min="1" placeholder="0" class="w-10 text-center py-1.5 rounded-lg text-sm font-semibold border border-[#E0D0C0] outline-none bg-white">
-                <button onclick="adjustInputQty('${v.id}', 1)" class="w-8 h-8 rounded-lg border border-[#E0D0C0] bg-white text-gray-500 font-bold">+</button>
-                <button onclick="addToCart('${item.id}','${v.id}')" class="p-2 ml-1 rounded-lg text-white bg-[#C0392B]">OK</button>
+                <button onclick="adjustInputQty('${v.id}', 1)" class="w-8 h-8 rounded-lg border border-[#E0D0C0] bg-white text-gray-500 font-bold hover:bg-gray-50">+</button>
+                <button onclick="addToCart('${item.id}','${v.id}')" class="p-2 ml-1 rounded-lg text-white bg-[#C0392B] hover:opacity-90 active:scale-95 transition-all">OK</button>
             </div>`;
         vc.appendChild(row);
       });
@@ -291,26 +300,37 @@ function renderMenu() {
 
 function addToCart(menuId, variantId) {
   const input = document.getElementById('qty-' + variantId);
-  let qty = parseInt(input.value);
-  if (!qty || qty < 1) qty = 1;
+  let qtyToAdd = parseInt(input.value);
+  if (isNaN(qtyToAdd) || qtyToAdd < 1) {
+    showToast('Masukkan jumlah pesanan');
+    return;
+  }
+  
   const menu = MENU.find(m => m.id === menuId);
   const variant = menu.variants.find(v => v.id === variantId);
-  if (cart[variantId]) { cart[variantId].qty += qty; } else { cart[variantId] = { menu, variant, qty }; }
+  
+  if (cart[variantId]) { 
+    cart[variantId].qty += qtyToAdd; 
+  } else { 
+    cart[variantId] = { menu, variant, qty: qtyToAdd }; 
+  }
+  
   input.value = '';
-  showToast(`${menu.name} ditambahkan!`);
+  showToast(`✅ ${menu.name} (${variant.label}) ditambahkan!`);
   saveCart();
 }
 
 function updateCartBadge() {
   const entries = Object.values(cart);
-  const totalItems = entries.reduce((s, c) => s + c.qty, 0);
+  const totalItemsCount = entries.reduce((s, c) => s + c.qty, 0);
   const badge = document.getElementById('cart-badge');
   const floatBar = document.getElementById('floating-cart');
-  if (totalItems > 0) {
-    badge.textContent = totalItems;
+  
+  if (totalItemsCount > 0) {
+    badge.textContent = totalItemsCount;
     badge.classList.remove('hidden');
-    const totalPrice = entries.reduce((s, c) => s + c.variant.price * c.qty, 0);
-    document.getElementById('floating-cart-total').textContent = `${totalItems} item • ${formatRp(totalPrice)}`;
+    const totalPrice = entries.reduce((s, c) => s + (c.variant.price * c.qty), 0);
+    document.getElementById('floating-cart-total').textContent = `${totalItemsCount} item • ${formatRp(totalPrice)}`;
     floatBar.classList.remove('hidden');
   } else {
     badge.classList.add('hidden');
@@ -321,22 +341,39 @@ function updateCartBadge() {
 function renderCart() {
   const container = document.getElementById('cart-items');
   const entries = Object.entries(cart);
+  
   if (entries.length === 0) {
     container.innerHTML = '';
     document.getElementById('cart-empty').classList.remove('hidden');
     document.getElementById('cart-footer').classList.add('hidden');
     return;
   }
+  
   document.getElementById('cart-empty').classList.add('hidden');
   document.getElementById('cart-footer').classList.remove('hidden');
   container.innerHTML = '';
   let subtotal = 0;
+  
   entries.forEach(([vid, item]) => {
     const lineTotal = item.variant.price * item.qty;
     subtotal += lineTotal;
     const row = document.createElement('div');
-    row.className = 'flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#F0E0D0]';
-    row.innerHTML = `<img src="${item.menu.image}" class="w-12 h-12 rounded-lg object-cover bg-gray-100"><div class="flex-1 min-w-0"><p class="font-semibold text-sm truncate">${item.menu.name}</p><p class="text-xs text-[#8B7355]">${item.variant.label}</p></div><div class="flex items-center gap-2"><button onclick="changeQty('${vid}',-1)" class="w-7 h-7 rounded-full border flex items-center justify-center">-</button><span class="w-6 text-center font-bold text-sm">${item.qty}</span><button onclick="changeQty('${vid}',1)" class="w-7 h-7 rounded-full border flex items-center justify-center">+</button></div><div class="text-right min-w-[80px]"><p class="font-bold text-sm text-[#C0392B]">${formatRp(lineTotal)}</p></div>`;
+    row.className = 'flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#F0E0D0] fade-in';
+    row.innerHTML = `
+      <img src="${item.menu.image}" class="w-12 h-12 rounded-lg object-cover bg-gray-100">
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-sm truncate text-[#2C1810]">${item.menu.name}</p>
+        <p class="text-xs text-[#8B7355]">${item.variant.label}</p>
+        <p class="font-bold text-xs text-[#C0392B] mt-0.5">${formatRp(lineTotal)}</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="changeQty('${vid}',-1)" class="w-7 h-7 rounded-full border border-[#E0D0C0] flex items-center justify-center bg-[#FFFAF5]">-</button>
+        <span class="w-6 text-center font-bold text-sm">${item.qty}</span>
+        <button onclick="changeQty('${vid}',1)" class="w-7 h-7 rounded-full border border-[#E0D0C0] flex items-center justify-center bg-[#FFFAF5]">+</button>
+        <button onclick="removeItem('${vid}')" class="ml-1 p-1.5 text-gray-400 hover:text-red-500 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+        </button>
+      </div>`;
     container.appendChild(row);
   });
   document.getElementById('cart-subtotal').textContent = formatRp(subtotal);
@@ -345,9 +382,19 @@ function renderCart() {
 function changeQty(vid, delta) {
   if (!cart[vid]) return;
   cart[vid].qty += delta;
-  if (cart[vid].qty <= 0) delete cart[vid];
+  if (cart[vid].qty <= 0) {
+    removeItem(vid);
+  } else {
+    saveCart();
+    renderCart();
+  }
+}
+
+function removeItem(vid) {
+  delete cart[vid];
   saveCart();
   renderCart();
+  showToast('Item dihapus');
 }
 
 function renderCheckout() {
@@ -358,8 +405,8 @@ function renderCheckout() {
     const line = item.variant.price * item.qty;
     total += line;
     const row = document.createElement('div');
-    row.className = 'flex justify-between py-1';
-    row.innerHTML = `<span class="text-[#5D4037]">${item.menu.name} x${item.qty}</span><span class="font-semibold">${formatRp(line)}</span>`;
+    row.className = 'flex justify-between py-1 border-b border-dashed border-[#F0E0D0] last:border-0';
+    row.innerHTML = `<span class="text-[#5D4037]">${item.menu.name} (${item.variant.label}) x${item.qty}</span><span class="font-semibold">${formatRp(line)}</span>`;
     container.appendChild(row);
   });
   document.getElementById('checkout-total').textContent = formatRp(total);
@@ -375,18 +422,33 @@ function placeOrder() {
     payment = "Transfer ke " + document.getElementById('bank-select').value;
   }
 
-  if (!name || !phone || !addr) { showToast('Harap lengkapi semua data!'); return; }
+  if (!name || !phone || !addr) { 
+    showToast('Harap lengkapi semua data!'); 
+    document.getElementById('checkout-form').reportValidity();
+    return; 
+  }
 
-  let message = `*PESANAN BARU - DAPUR MELODIA*\n----------------------------------\n*Nama:* ${name}\n*No. WA:* ${phone}\n*Alamat:* ${addr}\n*Pembayaran:* ${payment}\n----------------------------------\n*Daftar Pesanan:*\n`;
+  let message = `*PESANAN BARU - DAPUR MELODIA*\n`;
+  message += `----------------------------------\n`;
+  message += `*Nama:* ${name}\n`;
+  message += `*No. WA:* ${phone}\n`;
+  message += `*Alamat:* ${addr}\n`;
+  message += `*Pembayaran:* ${payment}\n`;
+  message += `----------------------------------\n`;
+  message += `*Daftar Pesanan:*\n`;
+  
   let grandTotal = 0;
   Object.values(cart).forEach(item => {
     const linePrice = item.variant.price * item.qty;
-    message += `- ${item.menu.name} (${item.variant.label}) x${item.qty} = ${formatRp(linePrice)}\n`;
+    message += `• ${item.menu.name} (${item.variant.label})\n  ${item.qty} x ${formatRp(item.variant.price)} = ${formatRp(linePrice)}\n`;
     grandTotal += linePrice;
   });
-  message += `----------------------------------\n*TOTAL: ${formatRp(grandTotal)}*`;
   
-  window.open(`https://wa.me/${APP_CONFIG.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+  message += `----------------------------------\n`;
+  message += `*TOTAL PEMBAYARAN: ${formatRp(grandTotal)}*`;
+  
+  const waUrl = `https://api.whatsapp.com/send?phone=${APP_CONFIG.whatsapp}&text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
   showPage('success');
 }
 
@@ -402,8 +464,13 @@ window.onload = () => {
     document.getElementById('el-tagline').textContent = APP_CONFIG.tagline;
     renderMenu();
     updateCartBadge();
+    
     const lastPage = localStorage.getItem('melodia_last_page');
-    if (lastPage) showPage(lastPage);
+    if (lastPage && lastPage !== 'success') {
+        showPage(lastPage);
+    } else {
+        showPage('menu');
+    }
 };
 </script>
  </body>
